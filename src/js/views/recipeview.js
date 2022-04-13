@@ -2,6 +2,16 @@ import icon from '../../img/icons.svg';
 class RecipeClass {
   #parentElement = document.querySelector('.recipe');
   #data;
+  spinner() {
+    const html = `
+    <div class="spinner">
+      <svg>
+        <use href="${icon}#icon-loader"></use>
+      </svg>
+    </div> `;
+    this.#parentElement.innerHTML = '';
+    this.#parentElement.insertAdjacentHTML('afterbegin', html);
+  }
 
   render(data) {
     this.#data = data;

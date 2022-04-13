@@ -1,5 +1,6 @@
 const { async } = require('regenerator-runtime');
 import * as model from './model.js';
+import { API_URL } from './config.js';
 // import * as recipeView from './views/recipeview.js';
 import recipeView from './views/recipeview.js';
 const timeout = function (s) {
@@ -11,9 +12,15 @@ const timeout = function (s) {
 };
 
 const rendorFunc = async function () {
-  const id = window.location.hash.slice(1);
-  await model.loadRecipe(id);
-  recipeView.render(model.state.recipe);
+  try {
+    const id = window.location.hash.slice(1);
+    recipeView.spinner();
+
+    await Promise.race([model.loadRecipe(id), timeout(5)]);
+    recipeView.render(model.state.recipe);
+  } catch (err) {
+    alert(`${err}`);
+  }
 };
 
 ['load', 'hashchange'].map(val => {
