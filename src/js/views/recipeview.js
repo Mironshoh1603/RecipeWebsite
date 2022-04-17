@@ -2,6 +2,7 @@ import icon from '../../img/icons.svg';
 class RecipeClass {
   #parentElement = document.querySelector('.recipe');
   #data;
+  #errorMessage = 'No recipes found for your query. Please try again!';
   spinner() {
     const html = `
     <div class="spinner">
@@ -22,7 +23,23 @@ class RecipeClass {
   #clearHtml() {
     this.#parentElement.innerHTML = '';
   }
-
+  addHandleEvent(handle) {
+    ['load', 'hashchange'].map(val => {
+      window.addEventListener(val, handle);
+    });
+  }
+  errorNotify() {
+    const html = `<div class="error">
+    <div>
+      <svg>
+        <use href="${icon}#icon-alert-triangle"></use>
+      </svg>
+    </div>
+    <p>${this.#errorMessage}</p>
+  </div>`;
+    this.#clearHtml();
+    this.#parentElement.insertAdjacentHTML('afterbegin', html);
+  }
   #generatorHtml(data) {
     let html = `<figure class="recipe__fig">
   <img src="${data.image}" alt="Tomato" class="recipe__img" />
