@@ -643,11 +643,11 @@ const PaginationModel = function(page = state.search.page) {
     const last = state.search.PerPage * page;
     return state.search.results.slice(start, last);
 };
-const UpdateServings = function(PeopleNumber = state.recipe.servings) {
+const UpdateServings = function(PeopleNum = state.recipe.servings) {
     state.recipe.indegridents.map((val)=>{
-        val.quantity = val.quantity * PeopleNumber / state.recipe.servings;
+        val.quantity = val.quantity * PeopleNum / state.recipe.servings;
     });
-    state.recipe.servings = PeopleNumber;
+    state.recipe.servings = PeopleNum;
     console.log(state.recipe);
 };
 
