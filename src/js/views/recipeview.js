@@ -87,7 +87,9 @@ class RecipeClass {
   </div>
   <button class="btn--round">
     <svg class="">
-      <use href="${icon}#icon-bookmark-fill"></use>
+      <use href="${icon}#icon-bookmark${
+      this.#data.bookmarked ? '-fill' : ''
+    }"></use>
     </svg>
   </button>
 </div>
@@ -140,6 +142,13 @@ class RecipeClass {
       if (servingNum >= 0 && servingNum <= 20) {
         handle(servingNum);
       }
+    });
+  }
+  addHandleBookmark(handle) {
+    this.#parentElement.addEventListener('click', e => {
+      const btn = e.target.closest('.btn--round');
+      if (!btn) return;
+      handle();
     });
   }
 }

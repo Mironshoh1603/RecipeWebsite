@@ -22,7 +22,7 @@ class resultsView {
         <p class="preview__publisher">${element.publisher}</p>
         <div class="preview__user-generated">
           <svg>
-            <use href="${icon}icon-user"></use>
+            <use href="${icon}#icon-user"></use>
           </svg>
         </div>
       </div>

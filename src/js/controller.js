@@ -51,11 +51,20 @@ const controllServings = function (servingsNum) {
   model.UpdateServings(servingsNum);
   recipeView.render(model.state.recipe);
 };
+const controlBookmark = function () {
+  if (model.state.recipe.bookmarked) {
+    model.deleteBookmark(model.state.recipe.id);
+  } else {
+    model.addBookmark(model.state.recipe);
+  }
+  recipeView.render(model.state.recipe);
+};
 
 const init = function () {
   searchview.addHandleEvent(controlSearchResults);
   recipeView.addHandleEvent(rendorFunc);
   paginationView.AddEventHandler(PaginationContorler);
   recipeView.addHandleServings(controllServings);
+  recipeView.addHandleBookmark(controlBookmark);
 };
 init();
