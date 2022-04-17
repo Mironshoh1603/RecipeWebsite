@@ -59,15 +59,21 @@ class RecipeClass {
     <svg class="recipe__info-icon">
       <use href="${icon}#icon-users"></use>
     </svg>
-    <span class="recipe__info-data recipe__info-data--people">4</span>
+    <span class="recipe__info-data recipe__info-data--people">${
+      data.servings
+    }</span>
     <span class="recipe__info-text">servings</span>
     <div class="recipe__info-buttons">
-      <button class="btn--tiny btn--increase-servings">
+      <button class="btn--tiny btn--increase-servings " id='${
+        this.#data.servings - 1
+      }'>
         <svg>
           <use href="${icon}#icon-minus-circle"></use>
         </svg>
       </button>
-      <button class="btn--tiny btn--increase-servings">
+      <button class="btn--tiny btn--increase-servings" id='${
+        this.#data.servings + 1
+      }'>
         <svg>
           <use href="${icon}#icon-plus-circle"></use>
         </svg>
@@ -125,6 +131,16 @@ class RecipeClass {
   </li>`;
     });
     return arr;
+  }
+  addHandleServings(handle) {
+    this.#parentElement.addEventListener('click', e => {
+      const btn = e.target.closest('.btn--tiny');
+      if (!btn) return;
+      const servingNum = +btn.getAttribute('id');
+      if (servingNum >= 0 && servingNum <= 20) {
+        handle(servingNum);
+      }
+    });
   }
 }
 export default new RecipeClass();

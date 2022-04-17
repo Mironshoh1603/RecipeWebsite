@@ -53,3 +53,11 @@ export const PaginationModel = function (page = state.search.page) {
   const last = state.search.PerPage * page;
   return state.search.results.slice(start, last);
 };
+
+export const UpdateServings = function (PeopleNumber = state.recipe.servings) {
+  state.recipe.indegridents.map(val => {
+    val.quantity = (val.quantity * PeopleNumber) / state.recipe.servings;
+  });
+  state.recipe.servings = PeopleNumber;
+  console.log(state.recipe);
+};

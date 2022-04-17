@@ -21,7 +21,7 @@ const rendorFunc = async function () {
 
     await model.loadRecipe(id);
     const data = model.state.recipe;
-    recipeView.render(model.state.recipe);
+    controllServings();
   } catch (err) {
     recipeView.errorNotify();
   }
@@ -46,6 +46,16 @@ const PaginationContorler = async function (page) {
     console.log(err);
   }
 };
-searchview.addHandleEvent(controlSearchResults);
-recipeView.addHandleEvent(rendorFunc);
-paginationView.AddEventHandler(PaginationContorler);
+
+const controllServings = function (servingsNum) {
+  model.UpdateServings(servingsNum);
+  recipeView.render(model.state.recipe);
+};
+
+const init = function () {
+  searchview.addHandleEvent(controlSearchResults);
+  recipeView.addHandleEvent(rendorFunc);
+  paginationView.AddEventHandler(PaginationContorler);
+  recipeView.addHandleServings(controllServings);
+};
+init();

@@ -540,7 +540,7 @@ const rendorFunc = async function() {
         _recipeviewJsDefault.default.spinner();
         await _modelJs.loadRecipe(id);
         const data = _modelJs.state.recipe;
-        _recipeviewJsDefault.default.render(_modelJs.state.recipe);
+        controllServings();
     } catch (err) {
         _recipeviewJsDefault.default.errorNotify();
     }
@@ -565,9 +565,17 @@ const PaginationContorler = async function(page) {
         console.log(err);
     }
 };
-_searchviewJsDefault.default.addHandleEvent(controlSearchResults);
-_recipeviewJsDefault.default.addHandleEvent(rendorFunc);
-_paginationViewJsDefault.default.AddEventHandler(PaginationContorler);
+const controllServings = function(servingsNum) {
+    _modelJs.UpdateServings(servingsNum);
+    _recipeviewJsDefault.default.render(_modelJs.state.recipe);
+};
+const init = function() {
+    _searchviewJsDefault.default.addHandleEvent(controlSearchResults);
+    _recipeviewJsDefault.default.addHandleEvent(rendorFunc);
+    _paginationViewJsDefault.default.AddEventHandler(PaginationContorler);
+    _recipeviewJsDefault.default.addHandleServings(controllServings);
+};
+init();
 
 },{"./model.js":"Y4A21","./config.js":"k5Hzs","./views/searchview.js":"furg1","./views/recipeview.js":"8Jlc1","regenerator-runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./views/resultsView":"cSbZE","./views/paginationView.js":"6z7bi"}],"Y4A21":[function(require,module,exports) {
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
@@ -579,6 +587,8 @@ parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe
 parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults
 );
 parcelHelpers.export(exports, "PaginationModel", ()=>PaginationModel
+);
+parcelHelpers.export(exports, "UpdateServings", ()=>UpdateServings
 );
 var _regeneratorRuntime = require("regenerator-runtime");
 var _configJs = require("./config.js");
@@ -632,6 +642,13 @@ const PaginationModel = function(page = state.search.page) {
     const start = state.search.PerPage * (page - 1);
     const last = state.search.PerPage * page;
     return state.search.results.slice(start, last);
+};
+const UpdateServings = function(PeopleNumber = state.recipe.servings) {
+    state.recipe.indegridents.map((val)=>{
+        val.quantity = val.quantity * PeopleNumber / state.recipe.servings;
+    });
+    state.recipe.servings = PeopleNumber;
+    console.log(state.recipe);
 };
 
 },{"regenerator-runtime":"dXNgZ","./config.js":"k5Hzs","./helpers.js":"hGI1E","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dXNgZ":[function(require,module,exports) {
@@ -1355,15 +1372,15 @@ class RecipeClass {
     <svg class="recipe__info-icon">
       <use href="${_iconsSvgDefault.default}#icon-users"></use>
     </svg>
-    <span class="recipe__info-data recipe__info-data--people">4</span>
+    <span class="recipe__info-data recipe__info-data--people">${data.servings}</span>
     <span class="recipe__info-text">servings</span>
     <div class="recipe__info-buttons">
-      <button class="btn--tiny btn--increase-servings">
+      <button class="btn--tiny btn--increase-servings " id='${this.#data.servings - 1}'>
         <svg>
           <use href="${_iconsSvgDefault.default}#icon-minus-circle"></use>
         </svg>
       </button>
-      <button class="btn--tiny btn--increase-servings">
+      <button class="btn--tiny btn--increase-servings" id='${this.#data.servings + 1}'>
         <svg>
           <use href="${_iconsSvgDefault.default}#icon-plus-circle"></use>
         </svg>
@@ -1421,6 +1438,14 @@ class RecipeClass {
   </li>`;
         });
         return arr;
+    }
+    addHandleServings(handle) {
+        this.#parentElement.addEventListener('click', (e)=>{
+            const btn = e.target.closest('.btn--tiny');
+            if (!btn) return;
+            const servingNum = +btn.getAttribute('id');
+            if (servingNum >= 0 && servingNum <= 20) handle(servingNum);
+        });
     }
 }
 exports.default = new RecipeClass();
