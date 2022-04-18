@@ -62,20 +62,32 @@ export const PaginationModel = function (page = state.search.page) {
   return state.search.results.slice(start, last);
 };
 
+const saveLocalStorage = function () {
+  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+};
+
 export const UpdateServings = function (PeopleNum = state.recipe.servings) {
   state.recipe.indegridents.map(val => {
     val.quantity = (val.quantity * PeopleNum) / state.recipe.servings;
   });
   state.recipe.servings = PeopleNum;
-  console.log(state.recipe);
 };
 
 export const addBookmark = function (recipe) {
   state.bookmarks.push(recipe);
   state.recipe.bookmarked = true;
+  saveLocalStorage();
 };
 export const deleteBookmark = function (id) {
   const index = state.bookmarks.findIndex(val => val.id == id);
   state.bookmarks.splice(index, 1);
   state.recipe.bookmarked = false;
+  saveLocalStorage();
+};
+
+export const getLocalStorage = function () {
+  const arr = JSON.parse(localStorage.getItem('bookmarks'));
+  if (arr == null) return;
+  state.bookmarks = arr;
+  return arr;
 };

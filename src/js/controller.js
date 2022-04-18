@@ -3,6 +3,7 @@ import * as model from './model.js';
 import { API_URL } from './config.js';
 import searchview from './views/searchview.js';
 import resultsview from './views/resultsView';
+import bookmarksView from './views/BookmarksView.js';
 import paginationView from './views/paginationView.js';
 // import * as recipeView from './views/recipeview.js';
 import recipeView from './views/recipeview.js';
@@ -57,7 +58,14 @@ const controlBookmark = function () {
   } else {
     model.addBookmark(model.state.recipe);
   }
+  bookmarksView.render(model.state.bookmarks);
   recipeView.render(model.state.recipe);
+};
+const controllerBookmarksAll = function () {
+  const data = model.getLocalStorage();
+  console.log(data);
+
+  bookmarksView.render(data);
 };
 
 const init = function () {
@@ -66,5 +74,6 @@ const init = function () {
   paginationView.AddEventHandler(PaginationContorler);
   recipeView.addHandleServings(controllServings);
   recipeView.addHandleBookmark(controlBookmark);
+  bookmarksView.addHandleEvent(controllerBookmarksAll);
 };
 init();
